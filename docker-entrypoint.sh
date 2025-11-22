@@ -51,6 +51,13 @@ php artisan cache:clear
 
 echo "Setup completed!"
 
+# Remove any default Nginx sites
+rm -f /etc/nginx/sites-enabled/default
+
+# Test Nginx configuration
+echo "Testing Nginx configuration..."
+nginx -t || echo "Warning: Nginx configuration test failed"
+
 # Start PHP-FPM in background
 php-fpm -D
 

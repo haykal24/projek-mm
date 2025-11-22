@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class RoleSeeder extends Seeder
 {
@@ -59,6 +60,21 @@ class RoleSeeder extends Seeder
             ]);
         })->get();
         $member->syncPermissions($memberPermissions);
+
+        // Buat akun superadmin
+        $superAdminUser = User::firstOrCreate(
+            ['email' => 'projek@gmail.com'],
+            [
+                'name' => 'Super Admin',
+                'password' => Hash::make('password'),
+                'email_verified_at' => now(),
+            ]
+        );
+        
+        // Assign role super_admin ke user
+        if (!$superAdminUser->hasRole('super_admin')) {
+            $superAdminUser->assignRole('super_admin');
+        }
 
         // Otomatis assign role member ke user baru (hanya contoh, implementasi production sebaiknya di observer User::created)
         // User::whereDoesntHave('roles')->update(['role_id' => $member->id]);

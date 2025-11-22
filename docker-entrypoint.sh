@@ -14,6 +14,10 @@ echo "Starting Laravel application setup..."
 echo "Running migrations..."
 php artisan migrate --force
 
+# Run seeders (creates superadmin and roles)
+echo "Running seeders..."
+php artisan db:seed --force || echo "Warning: Seeding failed or already completed"
+
 # Cache configuration
 echo "Caching configuration..."
 php artisan config:cache

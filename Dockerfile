@@ -45,6 +45,9 @@ COPY --chown=www-data:www-data . /var/www
 # Generate optimized autoloader
 RUN composer dump-autoload --optimize --classmap-authoritative
 
+# Publish Filament assets
+RUN php artisan filament:assets || true
+
 # Build assets
 RUN npm run build
 

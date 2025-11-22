@@ -22,9 +22,13 @@ php artisan config:cache
 echo "Caching routes..."
 php artisan route:cache
 
-# Cache views
+# Publish Filament assets (if not already published)
+echo "Publishing Filament assets..."
+php artisan filament:assets || true
+
+# Cache views (skip if fails, views will be compiled on-demand)
 echo "Caching views..."
-php artisan view:cache
+php artisan view:cache || echo "Warning: View cache failed, views will be compiled on-demand"
 
 # Create storage link if it doesn't exist
 if [ ! -L public/storage ]; then

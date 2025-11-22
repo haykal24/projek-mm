@@ -54,8 +54,9 @@ RUN npm run build
 # Remove node_modules to reduce image size (keep package.json for reference)
 RUN rm -rf node_modules
 
-# Copy Nginx configuration
+# Copy Nginx configuration and remove default site
 COPY nginx/conf.d/app.conf /etc/nginx/conf.d/default.conf
+RUN rm -f /etc/nginx/sites-enabled/default
 
 # Copy entrypoint script
 COPY docker-entrypoint.sh /usr/local/bin/

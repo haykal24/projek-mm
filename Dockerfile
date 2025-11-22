@@ -1,6 +1,6 @@
 FROM php:8.3-fpm
 
-# Install system dependencies and Node.js
+# Install system dependencies, Node.js, and Nginx
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libonig-dev \
@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     curl \
+    nginx \
     && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs
 
@@ -50,6 +51,9 @@ RUN npm run build
 # Remove node_modules to reduce image size (keep package.json for reference)
 RUN rm -rf node_modules
 
+# Copy Nginx configuration
+COPY nginx/conf.d/app.conf /etc/nginx/conf.d/default.conf
+
 # Copy entrypoint script
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
@@ -59,7 +63,7 @@ RUN chown -R www-data:www-data /var/www \
     && chmod -R 755 /var/www/storage \
     && chmod -R 755 /var/www/bootstrap/cache
 
-# Expose port 9000 for PHP-FPM
-EXPOSE 9000
+# Expose port 80 for HTTP (Nginx)
+EXPOSE 80
 
 ENTRYPOINT ["docker-entrypoint.sh"]
